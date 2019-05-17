@@ -10,7 +10,7 @@ Resources:
       Description: ''
       MemorySize: 128
       Timeout: 15
-      Role: 
+      Role:
         'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'
       Events:
         LambdaMicroservice:
@@ -29,3 +29,13 @@ Resources:
       Principal: apigateway.amazonaws.com
       # SourceArn:
       #   'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
+  createCodeBuild:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: createCodeBuild/index.handler
+      Runtime: nodejs8.10
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      Role:
+        'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'

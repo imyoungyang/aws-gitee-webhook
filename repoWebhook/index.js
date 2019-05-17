@@ -30,7 +30,7 @@ exports.handler = async(event) => {
   const k1 = sign('sha1', secret, body);
   console.log("k1: " + k1);
   console.log("xHubSignature: " + xHubSignature);
-  console.log("typeof body: " + typeof(body));
+  console.log("body: " + body);
   const payload = JSON.parse(body);
 
   if (k1 == xHubSignature && payload.action == 'created') {
