@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const { getSecrets } = require('./secrets-helper.js');
+const { startExecution } = require("./stepfunction-helper.js");
 const secretName = process.env.SECRET_NAME;
+const stateMachineArn = process.env.STATE_MACHINE_ARN;
 
 const sign = (algorithm, secret, buffer) => {
   const hmac = crypto.createHmac(algorithm, secret);
@@ -40,6 +42,11 @@ exports.handler = async(event) => {
     res.repo = payload.repository.name;
     res.location = payload.repository.html_url;
     res.hooks_url = payload.repository.hooks_url;
+    
+    var props = {};
+    props.stateMachineArn = stateMachineArn;
+    props.input = JSON.stringify(res);
+    res.job = await startExecution(props);
   }
   console.log("res: " + JSON.stringify(res));
   return {

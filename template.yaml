@@ -20,7 +20,9 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          SECRET_NAME: 'specialist/poc/cicd'
+          SECRET_NAME: 'specialist/poc/cicd',
+          STATE_MACHINE_ARN: 
+            'Fn::Sub': 'arn:aws:states:us-east-1:${AWS::AccountId}:stateMachine:gitee-webhook'
   repoWebhookPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
