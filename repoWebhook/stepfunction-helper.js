@@ -1,4 +1,6 @@
-const AWS = require('aws-skd');
+Object.defineProperty(exports, "__esModule", { value: true });
+
+const AWS = require('aws-sdk');
 var stepfunctions;
 
 /**

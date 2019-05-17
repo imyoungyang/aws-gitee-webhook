@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { getSecrets } = require('./secrets-helper.js');
-const { startExecution } = require("./stepfunction-helper.js");
+const { startExecution } = require('./stepfunction-helper.js');
 const secretName = process.env.SECRET_NAME;
 const stateMachineArn = process.env.STATE_MACHINE_ARN;
 
