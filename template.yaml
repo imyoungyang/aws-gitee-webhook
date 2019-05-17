@@ -18,6 +18,9 @@ Resources:
           Properties:
             Path: /repo
             Method: POST
+      Environment:
+        Variables:
+          SECRET_NAME: specialist/poc/cicd
   repoWebhookPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
@@ -27,8 +30,6 @@ Resources:
           - repoWebhook
           - Arn
       Principal: apigateway.amazonaws.com
-      # SourceArn:
-      #   'Fn::Sub': 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:*/*/*/*'
   createCodeBuild:
     Type: 'AWS::Serverless::Function'
     Properties:
@@ -39,3 +40,17 @@ Resources:
       Timeout: 15
       Role:
         'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'
+  createWebHook:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: createWebHook/lambda_function.lambda_handler
+      Runtime: python3.6
+      Description: ''
+      MemorySize: 128
+      Timeout: 15
+      Role:
+        'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'
+      CodeUri: .debug/
+      Environment:
+        Variables:
+          SECRET_NAME: specialist/poc/cicd
