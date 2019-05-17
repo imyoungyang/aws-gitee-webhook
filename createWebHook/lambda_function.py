@@ -9,9 +9,12 @@ def lambda_handler(event, context):
     project = event['projectName']
 
     # call api to create webhook
-    response = codebuild.create_webhook(projectName=project)
-    if not 'webhook' in response:
-        return response.json()
+    try:
+        response = codebuild.create_webhook(projectName=project)
+    except:
+        # existing. delete and recreate
+        codebuild.delete_webhook(projectName=project)
+        response = codebuild.create_webhook(projectName=project)
     
     webhook = response['webhook']
     
@@ -44,8 +47,9 @@ def lambda_handler(event, context):
 
     # call github ee webhook to create webhook
     r = requests.post(hooks_url, auth=(usr, token), json=payload, verify=False)
-    if r.status_code != 200:
+    if r.status_code != 201:
         raise Exception(r.json())
     res = copy.deepcopy(event)
-    res['hook_result'] = r.json()
+    res_from_git = r.json()
+    res['hook_result'] = res_from_git['url']
     return res
