@@ -38,7 +38,7 @@ exports.handler = async(event) => {
   if (k1 == xHubSignature && payload.action == 'created') {
     res.org = payload.repository.owner.login;
     res.repo = payload.repository.name;
-    res.location = payload.repository.full_name;
+    res.location = payload.repository.html_url;
     res.hooks_url = payload.repository.hooks_url;
   }
   console.log("res: " + JSON.stringify(res));
