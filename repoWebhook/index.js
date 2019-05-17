@@ -1,6 +1,6 @@
 const crypto = require('crypto');
 const { getSecrets } = require('./secrets-helper.js');
-const secretName = process.ENV.SECRET_NAME;
+const secretName = process.env.SECRET_NAME;
 
 const sign = (algorithm, secret, buffer) => {
   const hmac = crypto.createHmac(algorithm, secret);
@@ -23,7 +23,6 @@ exports.handler = async(event) => {
   if (secretStore == undefined) {
     secretStore = JSON.parse(await getSecrets(secretName));
   }
-
   const secret = secretStore.GITEE_ACCESS_TOKEN;
   const body = event.body;
   const payload = JSON.parse(body);
@@ -42,6 +41,7 @@ exports.handler = async(event) => {
     res.location = payload.repository.full_name;
     res.hooks_url = payload.repository.hooks_url;
   }
+  console.log("res: " + JSON.stringify(res));
   return {
     statusCode: 200,
     body: JSON.stringify(res),
