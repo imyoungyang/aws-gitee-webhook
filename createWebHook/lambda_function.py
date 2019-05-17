@@ -1,8 +1,8 @@
 import json, boto3, os, json, copy
 from botocore.vendored import requests
 """
-input: {org, repo, location, projectName, codeBuildProject}
-output: {org, repo, location, projectName, codeBuildProject}
+input: {org, repo, location, projectName}
+output: {org, repo, location, projectName, hook_result}
 """
 def lambda_handler(event, context):
     codebuild = boto3.client('codebuild')
