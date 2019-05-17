@@ -67,7 +67,7 @@ const createProjectWithGITEESource = (options) => {
   return new Promise((resolve,reject) => {
     codebuild.createProject(project, (err, data) => {
       if (err) {
-        reject(err);
+        reject(err.toString());
       } else {
         resolve(data);
       }
