@@ -2,10 +2,8 @@ const AWS = require("aws-sdk");
 const { createCodeBuild } = require('./codebuild-helper.js');
 
 /**
- * @param {string} options.org
- * @param {string} options.repo
- * @param {string} options.location (https://HOSTNAME/:owner/:repo)
- * @return codeBuildProject
+ * @input {org, repo, location}
+ * @return {org, repo, location, projectName, codeBuildProject}
 **/
 exports.handler = async (event, context, callback) => {
   const callerIdentity = await new AWS.STS().getCallerIdentity().promise();
@@ -15,5 +13,10 @@ exports.handler = async (event, context, callback) => {
   if (!event.accountID) event.accountID = accountID.toString();
 
   var codeBuildProject = await createCodeBuild(event);
-  callback(codeBuildProject);
+  
+  //clone event and prepare result
+  var result = JSON.parse(JSON.stringify(event));
+  result.projectName = event.org + "_" + event.repo;
+  result.codeBuildProject = codeBuildProject;
+  callback(result);
 };
