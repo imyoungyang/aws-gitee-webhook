@@ -50,7 +50,6 @@ Resources:
       Timeout: 15
       Role:
         'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'
-      CodeUri: .debug/
       Environment:
         Variables:
           SECRET_NAME: specialist/poc/cicd
