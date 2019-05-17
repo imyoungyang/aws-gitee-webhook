@@ -20,7 +20,7 @@ Resources:
             Method: POST
       Environment:
         Variables:
-          SECRET_NAME: specialist/poc/cicd
+          SECRET_NAME: 'specialist/poc/cicd'
   repoWebhookPermission:
     Type: 'AWS::Lambda::Permission'
     Properties:
@@ -52,4 +52,4 @@ Resources:
         'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:role/lambda_basic_execute_role'
       Environment:
         Variables:
-          SECRET_NAME: specialist/poc/cicd
+          SECRET_NAME: 'specialist/poc/cicd'

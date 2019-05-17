@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const { getSecrets } = require('./secrets-helper.js');
-const default_region = "us-east-1";
-const secretName = "specialist/poc/cicd";
+const secretName = process.ENV.SECRET_NAME;
 
 const sign = (algorithm, secret, buffer) => {
   const hmac = crypto.createHmac(algorithm, secret);
@@ -10,20 +9,24 @@ const sign = (algorithm, secret, buffer) => {
 };
 
 var secretStore = undefined;
-
+/**
+ * @input event: https://developer.github.com/webhooks/#example-delivery
+ * @output
+ *  {
+      res.org = payload.repository.owner.login;
+      res.repo = payload.repository.name;
+      res.location = payload.repository.full_name;
+      res.hooks_url = payload.repository.hooks_url;
+    }
+**/
 exports.handler = async(event) => {
   if (secretStore == undefined) {
-    secretStore = JSON.parse(await getSecrets(secretName, default_region));
+    secretStore = JSON.parse(await getSecrets(secretName));
   }
 
   const secret = secretStore.GITEE_ACCESS_TOKEN;
-
-  // TODO implement response. currently, just echo
   const body = event.body;
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify(body),
-  };
+  const payload = JSON.parse(body);
 
   // check signature
   const xHubSignature = event.headers['X-Hub-Signature'];
@@ -31,15 +34,16 @@ exports.handler = async(event) => {
   console.log("k1: " + k1);
   console.log("xHubSignature: " + xHubSignature);
   console.log("body: " + body);
-  const payload = JSON.parse(body);
 
+  var res = {};
   if (k1 == xHubSignature && payload.action == 'created') {
-    const full_name = payload.repository.full_name;
-    const repo_name = payload.repository.name;
-    const owner_login = payload.repository.owner.login;
-    const hooks_url = payload.repository.hooks_url;
-
-    console.log(`full_name: ${full_name} repo_name: ${repo_name} owner: ${owner_login} hooks_url: ${hooks_url}`);
+    res.org = payload.repository.owner.login;
+    res.repo = payload.repository.name;
+    res.location = payload.repository.full_name;
+    res.hooks_url = payload.repository.hooks_url;
   }
-  return response;
+  return {
+    statusCode: 200,
+    body: JSON.stringify(res),
+  };
 };

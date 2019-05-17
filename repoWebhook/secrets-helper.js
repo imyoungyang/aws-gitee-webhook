@@ -3,14 +3,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var AWS = require('aws-sdk'),
   client = undefined;
 
-var getSecrets = (secretName, region) => {
+var getSecrets = (secretName) => {
   return new Promise((resolve, reject) => {
     var self = this;
     var secret = '';
     if (self.client == undefined) {
-      self.client = new AWS.SecretsManager({
-        region: region
-      });
+      self.client = new AWS.SecretsManager();
     }
     self.client.getSecretValue({ SecretId: secretName }, function(err, data) {
       if (err) {

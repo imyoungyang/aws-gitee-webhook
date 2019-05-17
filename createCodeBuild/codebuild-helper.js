@@ -22,10 +22,10 @@ const artifacts = (options) => {
  * @param {object} options
  * @param {string} options.org
  * @param {string} options.repo
+ * @param {string} options.location (https://HOSTNAME/:owner/:repo)
  * @param {string} options.imageUri - default aws/codebuild/docker:18.09.0
  *  @cli aws codebuild list-curated-environment-images
  *  @see https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
- * @param {string} options.location (https://HOSTNAME/:owner/:repo)
  * @param {string} options.size - small, medium, or large
  * @param {string} options.bucket
  * @param {string} options.prefix
