@@ -15,6 +15,6 @@ exports.handler = async (event, context, callback) => {
   props.projectName = props.org + "_" + props.repo;
 
   var codeBuildProject = await createCodeBuild(props);
-  
+  props.projectArn = codeBuildProject.project.arn;
   callback(props);
 };
