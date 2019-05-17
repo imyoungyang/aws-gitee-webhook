@@ -1,8 +1,8 @@
+const AWS = require('aws-sdk');
 const crypto = require('crypto');
 const { getSecrets } = require('./secrets-helper.js');
 const { startExecution } = require('./stepfunction-helper.js');
 const secretName = process.env.SECRET_NAME;
-const stateMachineArn = process.env.STATE_MACHINE_ARN;
 
 const sign = (algorithm, secret, buffer) => {
   const hmac = crypto.createHmac(algorithm, secret);
@@ -42,9 +42,12 @@ exports.handler = async(event) => {
     res.repo = payload.repository.name;
     res.location = payload.repository.html_url;
     res.hooks_url = payload.repository.hooks_url;
+
+    const callerIdentity = await new AWS.STS().getCallerIdentity().promise();
+    const accountID = callerIdentity.Account;
     
     var props = {};
-    props.stateMachineArn = stateMachineArn;
+    props.stateMachineArn = `arn:aws:states:us-east-1:${accountID}:stateMachine:gitee-webhook`;
     props.input = JSON.stringify(res);
     res.job = await startExecution(props);
   }
